@@ -1,0 +1,151 @@
+import pygame
+import sys
+from cmath import rect
+import os
+
+# 시작 화면
+pygame.init()
+MAX_WIDTH = 1000
+MAX_HEIGHT = 800
+screen = pygame.display.set_mode((MAX_WIDTH, MAX_HEIGHT))
+
+current_path = os.path.dirname(__file__)
+background = pygame.image.load(os.path.join(current_path, "img01.jpg"))
+Ripper = pygame.image.load(os.path.join(current_path, "img02.jpg"))
+background2 = pygame.image.load(os.path.join(current_path, "img03.jpg"))
+middle_screen = pygame.image.load(os.path.join(current_path, "img04.png"))
+
+def main(): 
+    fps = pygame.time.Clock()
+    Ripper_size = Ripper.get_rect().size
+    Ripper_width = Ripper_size[0]
+    state = 0
+    background_x = 0
+    background_y = 0
+    Ripper_x = (MAX_WIDTH / 2) - (Ripper_width / 2)
+    Ripper_y = 0
+    to_x = 0
+    to_y = 0
+    Ripper_speed = 50
+    mid_alpha = 0
+    mid_alpha_1 = False
+
+    running = True
+    while running:
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_DOWN:
+                    state = 0
+                    to_y += Ripper_speed
+                if event.key == pygame.K_UP:
+                    background_y += Ripper_speed
+                    to_y -= Ripper_speed
+                if event.key == pygame.K_SPACE:
+                    if Ripper_y >=  750:
+                        mid_alpha_1 = True
+
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                    to_y = 0
+
+        screen.blit(background, (background_x, background_y))
+        screen.blit(Ripper, (Ripper_x, Ripper_y)) 
+
+        if Ripper_y < 0:
+            Ripper_y = 0
+
+        if state == 0:
+            if background_y > -7200 and Ripper_y >= MAX_HEIGHT / 2:
+                Ripper_y = MAX_HEIGHT / 2
+                background_y -= to_y
+            Ripper_y += to_y
+
+        if background_y <= -7200:
+            background_y = -7200
+            if Ripper_y > 750:
+                Ripper_y = 750
+
+        if mid_alpha_1:
+            mid_alpha += 6
+            middle_screen.set_alpha(mid_alpha)
+            if mid_alpha > 255:
+                running = False
+                mid_alpha = 255
+            screen.blit(middle_screen, (0, 0))
+
+
+
+        pygame.display.update()
+        fps.tick(30)
+
+
+
+    # 2번째 화면
+    Ripper_y = 750
+    background_y = 0
+    mid_alpha = 255
+    mid_alpha_1 = True
+    background_x = 0
+
+    running = True
+    while running:
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RIGHT:
+                    state = 0
+                    to_x += Ripper_speed
+                if event.key == pygame.K_LEFT:
+                    background_x += Ripper_speed
+                    to_x -= Ripper_speed
+                if event.key == pygame.K_SPACE:
+                    if Ripper_x >=  950:
+                        running = False
+
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT:
+                    to_x = 0
+
+        screen.blit(background2, (background_x, background_y))
+        screen.blit(Ripper, (Ripper_x, Ripper_y)) 
+
+        if Ripper_x < 0:
+            Ripper_x = 0
+
+        if state == 0:
+            if background_x > -9000 and Ripper_x >= MAX_WIDTH / 2:
+                Ripper_x = MAX_WIDTH / 2
+                background_x -= to_x
+            Ripper_x += to_x
+
+
+        if background_x <= -9000:
+            background_x = -9000
+            if Ripper_x > 950:
+                Ripper_x = 950
+
+        if mid_alpha_1:
+            mid_alpha -= 6
+            middle_screen.set_alpha(mid_alpha)
+            if mid_alpha < 0:
+                mid_alpha_1 = False
+                mid_alpha = 255
+            screen.blit(middle_screen, (0, 0))
+
+        pygame.display.update()
+        fps.tick(30)
+
+
+
+if __name__ == '__main__':
+    main()
+
+pygame.time.delay(1000)
+pygame.quit()
