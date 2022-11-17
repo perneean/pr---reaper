@@ -36,11 +36,7 @@
 # 이미지 변환
 - 시간을 지정하여 그려지는 이미지 변경
 
-ex) 
+# 결과
+<img width="1162" alt="img_ossGame" src="https://user-images.githubusercontent.com/107173046/202397937-5be51477-bdcd-494d-b1f1-0e3c67c14938.png">
 
-if time % 5 == 0 :
-
-elif time % 10 == 0:
-
-주의할 점 : 그려지는 순서를 생각하며 코드 짜기. 
 
